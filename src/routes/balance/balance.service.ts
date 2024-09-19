@@ -25,12 +25,38 @@ export class BalanceService {
   }
 
   async post(account: string, value: number) {
-    if (await this.balanceRepository.exists({ where: { account } })) {
+    const balance = await this.balanceRepository.findOne({
+      select: { id: true },
+      where: { account },
+    });
+    if (balance) {
       await this.balanceRepository.increment({ account }, 'value', value);
-      return await this.get(account);
+      return { id: balance.id, account, value: await this.get(account) };
     } else {
-      await this.balanceRepository.save({ account, value });
-      return value;
+      const response = await this.balanceRepository.save({ account, value });
+      return { id: response.id, account, value };
     }
+  }
+
+  async withdraw(account: string, value: number) {
+    const balance = await this.balanceRepository.findOne({
+      select: { id: true },
+      where: { account },
+    });
+
+    if (!balance) {
+      throw new NotFoundException();
+    }
+
+    await this.balanceRepository.decrement({ account }, 'value', value);
+    const response = {
+      id: balance.id,
+      account,
+      value: await this.get(account),
+    };
+    if (response.value <= 0) {
+      throw new Error('Balance insufficient');
+    }
+    return response;
   }
 }

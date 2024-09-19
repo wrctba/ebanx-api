@@ -64,17 +64,20 @@ describe('BalanceService', () => {
       // Arrange
       const account = '123';
       const value = 100;
+      const id = 1;
 
-      jest.spyOn(balanceRepository, 'exists').mockResolvedValue(false);
+      jest.spyOn(balanceRepository, 'findOne').mockResolvedValue(null);
       jest
         .spyOn(balanceRepository, 'save')
-        .mockResolvedValue({} as BalanceEntity);
+        .mockResolvedValue({ id: 1 } as BalanceEntity);
 
       // Act
       const result = await balanceService.post(account, value);
 
       // Assert
-      expect(result).toBe(value);
+      expect(result.id).toBe(id);
+      expect(result.account).toBe(account);
+      expect(result.value).toBe(value);
     });
 
     it('should increase existent account balance', async () => {
@@ -82,8 +85,10 @@ describe('BalanceService', () => {
       const account = '123';
       const value = 100;
       const total = 200;
-
-      jest.spyOn(balanceRepository, 'exists').mockResolvedValue(true);
+      const id = 1;
+      jest
+        .spyOn(balanceRepository, 'findOne')
+        .mockResolvedValue({ id } as BalanceEntity);
       jest
         .spyOn(balanceRepository, 'increment')
         .mockResolvedValue({} as UpdateResult);
@@ -93,7 +98,68 @@ describe('BalanceService', () => {
       const result = await balanceService.post(account, value);
 
       // Assert
-      expect(result).toBe(total);
+      expect(result.id).toBe(id);
+      expect(result.account).toBe(account);
+      expect(result.value).toBe(total);
+    });
+  });
+
+  describe('withdraw', () => {
+    it('should return erro NotFoundException', async () => {
+      // Arrange
+      const account = '123';
+      const value = 100;
+
+      jest.spyOn(balanceRepository, 'findOne').mockResolvedValue(null);
+
+      // Act / Assert
+      await expect(balanceService.withdraw(account, value)).rejects.toThrow(
+        NotFoundException,
+      );
+    });
+
+    it('should return erro Error', async () => {
+      // Arrange
+      const account = '123';
+      const value = 100;
+      const id = 1;
+      const total = 0;
+
+      jest
+        .spyOn(balanceRepository, 'findOne')
+        .mockResolvedValue({ id } as BalanceEntity);
+      jest
+        .spyOn(balanceRepository, 'decrement')
+        .mockResolvedValue({} as UpdateResult);
+      jest.spyOn(balanceService, 'get').mockResolvedValue(total);
+
+      // Act / Assert
+      await expect(balanceService.withdraw(account, value)).rejects.toThrow(
+        Error,
+      );
+    });
+
+    it('should decrease existent account balance', async () => {
+      // Arrange
+      const account = '123';
+      const value = 50;
+      const total = 50;
+      const id = 1;
+      jest
+        .spyOn(balanceRepository, 'findOne')
+        .mockResolvedValue({ id } as BalanceEntity);
+      jest
+        .spyOn(balanceRepository, 'decrement')
+        .mockResolvedValue({} as UpdateResult);
+      jest.spyOn(balanceService, 'get').mockResolvedValue(total);
+
+      // Act
+      const result = await balanceService.withdraw(account, value);
+
+      // Assert
+      expect(result.id).toBe(id);
+      expect(result.account).toBe(account);
+      expect(result.value).toBe(value);
     });
   });
 });
