@@ -1,6 +1,6 @@
 import { Entity, Column, JoinColumn, ManyToOne } from 'typeorm';
 
-import { BaseEntity } from './base-entity';
+import { BaseEntity } from './base.entity';
 import { EventEnum } from '@/types';
 import { BalanceEntity } from './balance.entity';
 

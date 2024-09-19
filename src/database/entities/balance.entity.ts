@@ -1,6 +1,6 @@
 import { Entity, Column, OneToMany } from 'typeorm';
 
-import { BaseEntity } from './base-entity';
+import { BaseEntity } from './base.entity';
 import { EventEntity } from './event.entity';
 
 @Entity()
