@@ -59,4 +59,14 @@ export class BalanceService {
     }
     return response;
   }
+
+  async transfer(origin: string, destination: string, value: number) {
+    const withdraw = await this.withdraw(origin, value);
+    const post = await this.post(destination, value);
+
+    return {
+      origin: { id: withdraw.id, balance: withdraw.value },
+      destination: { id: post.id, balance: post.value },
+    };
+  }
 }

@@ -162,4 +162,31 @@ describe('BalanceService', () => {
       expect(result.value).toBe(value);
     });
   });
+
+  describe('transfer', () => {
+    it('should return transferred transaction', async () => {
+      // Arrange
+      const orig = '123';
+      const origId = 1;
+      const dest = '456';
+      const destId = 2;
+      const value = 100;
+
+      jest
+        .spyOn(balanceService, 'withdraw')
+        .mockResolvedValue({ id: origId, account: orig, value });
+      jest
+        .spyOn(balanceService, 'post')
+        .mockResolvedValue({ id: destId, account: dest, value });
+
+      // Act
+      const result = await balanceService.transfer(orig, dest, value);
+
+      // Assert
+      expect(result.origin.id).toBe(origId);
+      expect(result.origin.balance).toBe(value);
+      expect(result.destination.id).toBe(destId);
+      expect(result.destination.balance).toBe(value);
+    });
+  });
 });
