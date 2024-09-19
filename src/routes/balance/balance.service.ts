@@ -23,4 +23,14 @@ export class BalanceService {
 
     return balance.value;
   }
+
+  async post(account: string, value: number) {
+    if (await this.balanceRepository.exists({ where: { account } })) {
+      await this.balanceRepository.increment({ account }, 'value', value);
+      return await this.get(account);
+    } else {
+      await this.balanceRepository.save({ account, value });
+      return value;
+    }
+  }
 }

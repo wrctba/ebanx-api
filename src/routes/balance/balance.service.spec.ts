@@ -1,4 +1,4 @@
-import { Repository } from 'typeorm';
+import { Repository, UpdateResult } from 'typeorm';
 
 import { BalanceEntity } from '@/database/entities';
 
@@ -46,7 +46,7 @@ describe('BalanceService', () => {
       expect(result).toBe(balanceValue);
     });
 
-    it('should return the account balance', async () => {
+    it('should return NotFoundException', async () => {
       // Arrange
       const accountId = '123';
 
@@ -56,6 +56,44 @@ describe('BalanceService', () => {
       await expect(balanceService.get(accountId)).rejects.toThrow(
         NotFoundException,
       );
+    });
+  });
+
+  describe('post', () => {
+    it('should create a account balance', async () => {
+      // Arrange
+      const account = '123';
+      const value = 100;
+
+      jest.spyOn(balanceRepository, 'exists').mockResolvedValue(false);
+      jest
+        .spyOn(balanceRepository, 'save')
+        .mockResolvedValue({} as BalanceEntity);
+
+      // Act
+      const result = await balanceService.post(account, value);
+
+      // Assert
+      expect(result).toBe(value);
+    });
+
+    it('should increase existent account balance', async () => {
+      // Arrange
+      const account = '123';
+      const value = 100;
+      const total = 200;
+
+      jest.spyOn(balanceRepository, 'exists').mockResolvedValue(true);
+      jest
+        .spyOn(balanceRepository, 'increment')
+        .mockResolvedValue({} as UpdateResult);
+      jest.spyOn(balanceService, 'get').mockResolvedValue(total);
+
+      // Act
+      const result = await balanceService.post(account, value);
+
+      // Assert
+      expect(result).toBe(total);
     });
   });
 });
