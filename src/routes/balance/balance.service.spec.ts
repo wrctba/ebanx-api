@@ -5,7 +5,7 @@ import { BalanceEntity } from '@/database/entities';
 import { BalanceService } from './balance.service';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { Test, TestingModule } from '@nestjs/testing';
-import { NotFoundException } from '@nestjs/common';
+import { BadRequestException, NotFoundException } from '@nestjs/common';
 
 describe('BalanceService', () => {
   let balanceService: BalanceService;
@@ -118,12 +118,12 @@ describe('BalanceService', () => {
       );
     });
 
-    it('should return erro Error', async () => {
+    it('should return erro BadRequestException', async () => {
       // Arrange
       const account = '123';
       const value = 100;
       const id = 1;
-      const total = 0;
+      const total = -1;
 
       jest
         .spyOn(balanceRepository, 'findOne')
@@ -135,7 +135,7 @@ describe('BalanceService', () => {
 
       // Act / Assert
       await expect(balanceService.withdraw(account, value)).rejects.toThrow(
-        Error,
+        BadRequestException,
       );
     });
 

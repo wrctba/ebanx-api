@@ -1,1 +1,5 @@
 GET http://localhost:3000/balance?accout=1234 HTTP/1.1
+
+###
+
+GET http://localhost:3000/balance?accout=100 HTTP/1.1

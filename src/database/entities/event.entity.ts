@@ -12,7 +12,7 @@ export class EventEntity extends BaseEntity {
   }
 
   @Column({ type: 'varchar', enum: EventEnum })
-  event: EventEnum;
+  type: EventEnum;
 
   @ManyToOne(() => BalanceEntity, (balance) => balance.eventsOrigin)
   @JoinColumn({ name: 'originId' })

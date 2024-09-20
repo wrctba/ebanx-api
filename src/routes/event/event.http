@@ -1,0 +1,55 @@
+POST http://localhost:3000/event HTTP/1.1
+Content-Type: application/json
+
+{
+    "type": "deposit",
+    "destination": "100",
+    "amount": 10
+}
+
+
+###
+
+POST http://localhost:3000/event HTTP/1.1
+Content-Type: application/json
+
+{
+    "type": "withdraw",
+    "origin": "200",
+    "amount": 10
+}
+
+###
+
+POST http://localhost:3000/event HTTP/1.1
+Content-Type: application/json
+
+{
+    "type": "withdraw",
+    "origin": "100",
+    "amount": 5
+}
+
+###
+
+POST http://localhost:3000/event HTTP/1.1
+Content-Type: application/json
+
+{
+    "type": "transfer",
+    "origin": "100",
+    "amount": 15,
+    "destination": "300"
+}
+
+###
+
+POST http://localhost:3000/event HTTP/1.1
+Content-Type: application/json
+
+{
+    "type": "transfer",
+    "origin": "200",
+    "amount": 15,
+    "destination": "300"
+}

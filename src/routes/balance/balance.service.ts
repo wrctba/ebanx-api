@@ -1,5 +1,10 @@
 import { BalanceEntity } from '@/database/entities';
-import { Injectable, NotFoundException, Scope } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+  Scope,
+} from '@nestjs/common';
 
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
@@ -54,8 +59,8 @@ export class BalanceService {
       account,
       value: await this.get(account),
     };
-    if (response.value <= 0) {
-      throw new Error('Balance insufficient');
+    if (response.value < 0) {
+      throw new BadRequestException('Balance insufficient');
     }
     return response;
   }

@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
 import { BalanceEntity, EventEntity } from './database/entities';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { BalanceModule } from './routes';
+import { BalanceModule, EventModule, ResetModule } from './routes';
 
 @Module({
   imports: [
@@ -12,6 +12,8 @@ import { BalanceModule } from './routes';
       synchronize: true,
     }),
     BalanceModule,
+    EventModule,
+    ResetModule,
   ],
   controllers: [],
   providers: [],

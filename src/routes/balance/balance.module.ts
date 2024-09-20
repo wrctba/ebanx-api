@@ -9,5 +9,6 @@ import { BalanceEntity } from '@/database/entities';
   imports: [TypeOrmModule.forFeature([BalanceEntity])],
   controllers: [BalanceController],
   providers: [BalanceService],
+  exports: [BalanceService],
 })
 export class BalanceModule {}
