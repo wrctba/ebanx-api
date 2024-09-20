@@ -72,7 +72,6 @@
       "<rootDir>/dist",
       "<rootDir>/coverage",
       "<rootDir>/src/entities",
-      "<rootDir>/test",
       "<rootDir>/src/main.ts"
     ],
     "testRegex": ".*\\.spec\\.ts$",
@@ -81,10 +80,6 @@
     },
     "collectCoverageFrom": [
       "src/**/*.ts"
-    ],
-    "coveragePathIgnorePatterns": [
-      "src/database",
-      "src/test"
     ],
     "testEnvironment": "node"
   }
